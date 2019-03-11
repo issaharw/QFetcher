@@ -1,0 +1,5 @@
+jerseyClient:
+  minThreads: 2
+  maxThreads: 40
+
+fetchTimeoutInMillis: 30000

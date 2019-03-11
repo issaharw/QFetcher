@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Q-Fetcher</title>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/qfetcher.js"></script>
+    <link rel="stylesheet" href="css/qfetcher.css">
+</head>
+<body>
+    <table id="questions">
+        <tr>
+            <th id="sourceHeader">Source</th>
+            <th>Question Text</th>
+        </tr>
+    </table>
+
+    <img id="loading" src="img/loading.gif"/>
+    <script>
+        getSources("#questions", "#loading")
+    </script>
+</body>
+</html>
