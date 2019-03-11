@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 import javax.ws.rs.Consumes
 import javax.ws.rs.GET
+import javax.ws.rs.POST
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
@@ -28,12 +29,13 @@ class QFetcherResource @Inject constructor(private val configuration: QFetcherCo
   @Path("/sources")
   fun getSources() = Sources.sources
 
-  @GET
+  @POST
   @Path("/all_questions")
-  fun getAllQuestions(): QuestionsResult {
+  fun getAllQuestions(sources: List<String>): QuestionsResult {
+    logger.info("Getting questions for these sources: $sources")
     val start = System.currentTimeMillis()
     // associateWith creates a map between the sources and the result (which is a Future).
-    val futures = Sources.sources.associateWith { src ->
+    val futures = sources.associateWith { src ->
       // run all the futures in an async mode, and collect the futures
       CompletableFuture.supplyAsync {
         try {
@@ -41,14 +43,9 @@ class QFetcherResource @Inject constructor(private val configuration: QFetcherCo
           val fetcher = fetchers.fetchers.single { it.shouldFetch(src) }
           fetcher.fetch(src)
         }
-        // Problem in source type
-        catch (e: IllegalArgumentException) {
-          logger.warn("Couldn't find a fetcher for this source: $src")
-          emptyList<QuestionResult>()
-        }
-        // Catch all exceptions from the fetchers, so it won't crash other fetchers.
+        // Catch all exceptions from each fetcher, so it won't crash other fetchers.
         catch (e: Exception) {
-          logger.error("Problem fetching questions from source.", e)
+          logger.error("Problem fetching questions from source: $src.", e)
           emptyList<QuestionResult>()
         }
       }

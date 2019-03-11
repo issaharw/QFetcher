@@ -9,13 +9,13 @@ enum class SourceType(val desc: String) {
 
   companion object {
 
-    fun fromSourceURI(uri: String): SourceType {
+    fun fromSourceURI(uri: String): SourceType? {
       val postfix = uri.toLowerCase().substringAfterLast(".")
       return when (postfix) {
         "json" -> JSON
         "csv" -> CSV
         "png", "jpg", "bmp" -> IMAGE
-        else -> throw IllegalArgumentException("Source type not supported for this source: $uri")
+        else -> null
       }
     }
   }

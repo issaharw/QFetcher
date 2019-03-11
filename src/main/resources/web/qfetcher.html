@@ -7,16 +7,22 @@
     <link rel="stylesheet" href="css/qfetcher.css">
 </head>
 <body>
-    <table id="questions">
-        <tr>
-            <th id="sourceHeader">Source</th>
-            <th>Question Text</th>
-        </tr>
-    </table>
-
-    <img id="loading" src="img/loading.gif"/>
+    <h3>Select the sources you want to fetch questions from:</h3>
+    <select id="sources" size="10" multiple></select> <br/>
+    <button type="button" onclick="$('#sources option').prop('selected', true)">Select All</button>
+    <button type="button" onclick="$('#sources option').prop('selected', false)">Clear All</button>
+    <button type="button" onclick="getFilteredQuestions('#sources', '#questionsDiv')">Filter</button>
+    <br/><br/>
+    <div id="questionsDiv">
+        <table id="questions">
+            <tr>
+                <th id="sourceHeader">Source</th>
+                <th>Question Text</th>
+            </tr>
+        </table>
+    </div>
     <script>
-        getSources("#questions", "#loading")
+        getSources("#sources")
     </script>
 </body>
 </html>
